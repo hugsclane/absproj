@@ -12,3 +12,9 @@ This repo explores the Australian Bureau of Statistics data api.
 
 ##### The api reference used to as a reference for structure.
 https://api.gov.au/assets/APIs/abs/DataAPI.openapi.html
+
+
+##### Thanks
+dakivara pydantic_with_psycopg tutorial
+https://github.com/dakivara/pydantic_with_psycopg
+
