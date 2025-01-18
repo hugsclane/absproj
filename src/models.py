@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-import psycopg2
+from typing import Optional
+import psycopg
 
 
 class Search(BaseModel):
@@ -36,9 +37,9 @@ class Search(BaseModel):
 class Metadata(BaseModel):
     id: str
     # dataflowId
-    agencyid: optional[str] = none #default all
+    agencyid: Optional[str] = None #default all
     dataflowid: str
-    version: optional[str] = none #default latest
+    version: Optional[str] = None #default latest
     isFinal : bool
     name : str
     names : dict
@@ -46,6 +47,15 @@ class Metadata(BaseModel):
     descriptions: dict
     annotations: list
 
+class MetadataInput(BaseModel):
+
+    agencyid: Optional[str] = None #default all
+    dataflowid: str
+    version: Optional[str] = None #default latest
+    isFinal : bool
+    name : str
+    description: str
+    annotations: list
 
 if __name__ == "__main__":
     pass

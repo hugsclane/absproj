@@ -1,40 +1,37 @@
-import psycopg2
+from psycopg import Connection
+import json
 import requests
 from rest import get_req
-from seralizer import urlgen
-from validator import Metadata
+from models import Metadata
 
 
 
 class Pg_service:
 
-    def __init__(self,dbname,user):
-        self.conn = psycopg2.connect(f"dbname = {dbname} user = {user}")
-        self.cursor = self.conn.cursor
+    def __init__(self,host, port, dbname):
+        self.conn_info = make_conninfo(host = host, port = port, dbname = dbname)
+            # TODO: test me
 
-    # TODO: test me
-    def table_exist(self,table_name):
+    def create_connection():
+        with Connection.connect(conninfo = self.conninfo , options="-c searchpath=demo") as conn:
+            crud = CRUD(conn)
+            return crud
 
-        self.cursor.execute("SELECT EXISTS(SELECT * \
-                FROM information_schema.tables WHERE table_name = %s"), (table_name))
-        return cursor.fetchone()[0]
+# abandoned this until validation set up since allows sql injection.
+   #def insert_metadata_stmt(table_name,**kwargs):
+    #    #TODO validate kwargs with table_name
+    #    keys = tuple(kwargs.keys())
+    #    stmt = f"""
+    #    INSERT INTO ({table_name}) ({keys})
+    #    """
 
-    #Table met is a pydantic(BaseModel) class.
-    def create_table(self,table_name,table_meta):
-        if self.table_exist(f"{table_name}"):
-            #TODO create a proper create table funtion and exists Exception
-            raise Exception("Table " + table_name + " Exists")
-        #maybe catch errors here if this starts causing problems.
-        self.cursor.execute(f"CREATE TABLE {table_name} \
-                (id serial PRIMARY KEY, num integer, data varchar);")
-
-    def insert_to_table(self,data_list)
-        self.cursor.copy_from(f,)
 
 def main():
-    conn = psycopg2.connect("dbname = testdb user=postgres")
-    cur = conn.cursor
-
+    with open("../metadata/abs_dataflow.json", 'r') as file:
+        data = json.loads(file.read())
+        file.close()
+    print(data)
+    # crud.insert_metadata()
 if __name__ == "__main__":
     main()
 
