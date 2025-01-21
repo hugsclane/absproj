@@ -1,0 +1,46 @@
+2025-01-21 15:27:52.875 AEDT [66054] LOG:  starting PostgreSQL 14.15 (Homebrew) on aarch64-apple-darwin24.1.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.4), 64-bit
+2025-01-21 15:27:52.876 AEDT [66054] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-01-21 15:27:52.877 AEDT [66054] LOG:  listening on IPv6 address "::1", port 5432
+2025-01-21 15:27:52.877 AEDT [66054] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-01-21 15:27:52.879 AEDT [66055] LOG:  database system was shut down at 2025-01-21 15:26:31 AEDT
+2025-01-21 15:27:52.881 AEDT [66054] LOG:  database system is ready to accept connections
+2025-01-21 20:51:25.302 AEDT [66054] LOG:  received fast shutdown request
+2025-01-21 20:51:25.302 AEDT [66054] LOG:  aborting any active transactions
+2025-01-21 20:51:25.304 AEDT [66054] LOG:  background worker "logical replication launcher" (PID 66061) exited with exit code 1
+2025-01-21 20:51:25.304 AEDT [66056] LOG:  shutting down
+2025-01-21 20:51:25.309 AEDT [66054] LOG:  database system is shut down
+2025-01-21 22:00:28.966 AEDT [72733] LOG:  starting PostgreSQL 14.15 (Homebrew) on aarch64-apple-darwin24.1.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.4), 64-bit
+2025-01-21 22:00:28.968 AEDT [72733] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-01-21 22:00:28.968 AEDT [72733] LOG:  listening on IPv6 address "::1", port 5432
+2025-01-21 22:00:28.968 AEDT [72733] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-01-21 22:00:28.969 AEDT [72734] LOG:  database system was shut down at 2025-01-21 21:48:47 AEDT
+2025-01-21 22:00:28.972 AEDT [72733] LOG:  database system is ready to accept connections
+2025-01-21 22:09:29.017 AEDT [72733] LOG:  could not open file "postmaster.pid": No such file or directory
+2025-01-21 22:09:29.018 AEDT [72733] LOG:  performing immediate shutdown because data directory lock file is invalid
+2025-01-21 22:09:29.018 AEDT [72733] LOG:  received immediate shutdown request
+2025-01-21 22:09:29.018 AEDT [72733] LOG:  could not open file "postmaster.pid": No such file or directory
+2025-01-21 22:09:29.020 AEDT [72739] LOG:  could not open temporary statistics file "pg_stat/global.tmp": No such file or directory
+2025-01-21 22:09:29.023 AEDT [72733] LOG:  database system is shut down
+2025-01-21 22:10:55.886 AEDT [73258] LOG:  starting PostgreSQL 14.15 (Homebrew) on aarch64-apple-darwin24.1.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.4), 64-bit
+2025-01-21 22:10:55.887 AEDT [73258] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-01-21 22:10:55.887 AEDT [73258] LOG:  listening on IPv6 address "::1", port 5432
+2025-01-21 22:10:55.887 AEDT [73258] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-01-21 22:10:55.889 AEDT [73259] LOG:  database system was shut down at 2025-01-21 22:10:47 AEDT
+2025-01-21 22:10:55.891 AEDT [73258] LOG:  database system is ready to accept connections
+2025-01-21 22:19:46.550 AEDT [73424] FATAL:  password authentication failed for user "postgres"
+2025-01-21 22:19:46.550 AEDT [73424] DETAIL:  Role "postgres" does not exist.
+	Connection matched pg_hba.conf line 85: "local   all             all                                     md5"
+2025-01-21 22:19:54.566 AEDT [73428] FATAL:  password authentication failed for user "postgres"
+2025-01-21 22:19:54.566 AEDT [73428] DETAIL:  Role "postgres" does not exist.
+	Connection matched pg_hba.conf line 85: "local   all             all                                     md5"
+2025-01-21 22:20:04.490 AEDT [73435] FATAL:  password authentication failed for user "postgres"
+2025-01-21 22:20:04.490 AEDT [73435] DETAIL:  Role "postgres" does not exist.
+	Connection matched pg_hba.conf line 85: "local   all             all                                     md5"
+2025-01-21 22:24:31.985 AEDT [73633] FATAL:  lock file "postmaster.pid" already exists
+2025-01-21 22:24:31.985 AEDT [73633] HINT:  Is another postmaster (PID 73258) running in data directory "/Users/hcl/Dev/absproj/db"?
+2025-01-21 22:25:32.170 AEDT [73679] FATAL:  password authentication failed for user "postgres"
+2025-01-21 22:25:32.170 AEDT [73679] DETAIL:  Role "postgres" does not exist.
+	Connection matched pg_hba.conf line 85: "local   all             all                                     md5"
+2025-01-21 22:25:50.201 AEDT [73695] FATAL:  password authentication failed for user "hcl"
+2025-01-21 22:25:50.201 AEDT [73695] DETAIL:  Password does not match for user "hcl".
+	Connection matched pg_hba.conf line 85: "local   all             all                                     md5"
