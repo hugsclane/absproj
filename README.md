@@ -1,5 +1,5 @@
 # Project Description
-This repo explores the Australian Bureau of Statistics data api.
+A website providing access to ABS data and some modeling tools with that data.
 
 ## Technologies
 - python

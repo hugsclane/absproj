@@ -1,6 +1,9 @@
 from psycopg import Connection
 from pydantic import BaseModel
 
+from src.statements import *
+from src.models import *
+
 Class CRUD:
 
     def __init__(self, conn: Connection)
@@ -18,4 +21,4 @@ Class CRUD:
            return cursor.fetchone()
 
     def insert_metadata(self,input: MetadataInput) -> str:
-        return self._insert()
+        return self._insert(insert_metadata_stmt,input)

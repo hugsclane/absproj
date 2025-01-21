@@ -3,6 +3,7 @@ import json
 import requests
 from rest import get_req
 from models import Metadata
+from src.crud import CRUD
 
 
 
@@ -30,8 +31,11 @@ def main():
     with open("../metadata/abs_dataflow.json", 'r') as file:
         data = json.loads(file.read())
         file.close()
-    print(data)
-    # crud.insert_metadata()
+    print(data["data"])
+    pg_serve = Pg_service()
+    crud = pg_serve.create_connection(dbname = "absData",user = "admin",
+                                      password = "admin", port = "5432")
+    crud.insert_metadata(data["data"])
 if __name__ == "__main__":
     main()
 
