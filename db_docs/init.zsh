@@ -9,3 +9,8 @@ pg_ctl -D db -l db_docs/logfile start
 
 #login
 psql postgres
+
+
+#stop server
+#pg_ctl -D db stop
+#

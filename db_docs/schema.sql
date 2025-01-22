@@ -2,8 +2,8 @@
 
 
 -- CREATE TYPE dataflowidentifier AS (
---     agencyid VARCHAR, -- is optional, reverts to all if not provided
---     dataflowid VARCHAR,
+--     agencyid TEXT, -- is optional, reverts to all if not provided
+--     dataflowid TEXT,
 --     version int[3] -- is optional, reverts to latest version if not provided
 -- )
 -- CREATE TYPE datakey AS (
@@ -11,28 +11,36 @@
 --     idx INT[], --list of all selected industires
 --     adjustment INT[], --list of all adjustments to dataset
 --     region INT[], --list of averages?
---     frequency VARCHAR
+--     frequency TEXT
 -- )
+-- TODO format
+CREATE SCHEMA absdata;
 
-CREATE TABLE metadata(
+CREATE TYPE texttextpair AS (k TEXT, V TEXT);
+
+CREATE TABLE absdata.metadata(
     id SERIAL PRIMARY KEY,
-    dfid VARCHAR,
-    links : VARCHAR,
-    version: VARCHAR,
-    agencyid: VARCHAR,
-    name: VARCHAR
-)
+    dataflowid TEXT,
+    links texttextpair,
+    version TEXT,
+    isfinal BOOLEAN,
+    agencyid TEXT,
+    name TEXT,
+    names texttextpair
+);
+--Excluding annotations
 
 -- CREATE TABLE data_history(
+
 --     id SERIAL PRIMARY KEY,
 --     dfid dataflowidentifier,
 --     dkey datakey,
---     startperiod VARCHAR(8),
---     endperiod VARCHAR(8),
---     format VARCHAR(21),
---     detail VARCHAR(14)
---     dimension VARCHAR --this takes the ID of any other dimesions to provide a cross sectional view
+--     startperiod TEXT(8),
+--     endperiod TEXT(8),
+--     format TEXT(21),
+--     detail TEXT(14)
+--     dimension TEXT --this takes the ID of any other dimesions to provide a cross sectional view
 --     }
 -- );
 
--- -- TODO: add get metadata history, or create a seperate metadata table.
+-- -- TODO add get metadata history, or create a seperate metadata table.

@@ -1,8 +1,8 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, computed_field
+from typing import Optional, Dict
 import psycopg
 
-
+#TODO: fix this up ref schema.sql.
 class Search(BaseModel):
     id: int
     # dataflowId
@@ -40,22 +40,26 @@ class Metadata(BaseModel):
     agencyid: Optional[str] = None #default all
     dataflowid: str
     version: Optional[str] = None #default latest
+    links: Dict[str,str]
     isFinal : bool
     name : str
-    names : dict
-    description: str
-    descriptions: dict
-    annotations: list
+    names : Dict[str,str]
+    # annotations: list
 
 class MetadataInput(BaseModel):
 
     agencyid: Optional[str] = None #default all
     dataflowid: str
+    links: Dict[str,str]
     version: Optional[str] = None #default latest
     isFinal : bool
     name : str
-    description: str
-    annotations: list
+    names: Dict[str,str]
+    # annotations: list
+
+    @computed_field
+    def id(self) -> str:
+        return uuid.hex
 
 if __name__ == "__main__":
     pass
