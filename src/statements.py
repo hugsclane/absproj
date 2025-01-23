@@ -6,23 +6,23 @@ __all__ = [
 ]
 
 in_metad_stmt = """
-INSERT INTO metadata (
+INSERT INTO absdata.metadata (
         id,
         agencyId,
         dataflowId,
-        links,
         version,
         isFinal,
         name,
-        names,
-        ) VALUE(
+        description
+        ) VALUES (
         %(id)s,
         %(agencyId)s,
         %(dataflowId)s,
         %(version)s,
         %(isFinal)s,
-        %(name)s,
-        %(names)s,
+        %(name)s, 
+        %(description)s
+        )
 RETURNING id
 
 """

@@ -16,17 +16,16 @@
 -- TODO format
 CREATE SCHEMA absdata;
 
-CREATE TYPE texttextpair AS (k TEXT, V TEXT);
+-- CREATE TYPE texttextpair AS (k TEXT, V TEXT);
 
 CREATE TABLE absdata.metadata(
-    id SERIAL PRIMARY KEY,
+    id CHAR(32) PRIMARY KEY,
     dataflowid TEXT,
-    links texttextpair,
     version TEXT,
     isfinal BOOLEAN,
     agencyid TEXT,
-    name TEXT,
-    names texttextpair
+    description TEXT,
+    name TEXT
 );
 --Excluding annotations
 

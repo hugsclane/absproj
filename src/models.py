@@ -1,14 +1,23 @@
+from uuid import uuid4
 from pydantic import BaseModel, computed_field
 from typing import Optional, Dict
 import psycopg
+
+
+__all__ = [
+        "Search",
+        "Metadata",
+        "MetadataInput"
+        ]
+
 
 #TODO: fix this up ref schema.sql.
 class Search(BaseModel):
     id: int
     # dataflowId
-    agencyId: Optional[str] = None #Default All
+    agencyID: str #Default All
     dataflowId: str
-    version: Optional[str] = None #Default Latest
+    version: str #Default Latest
     # datakey
     index: int
     adjustment: str
@@ -21,8 +30,8 @@ class Search(BaseModel):
     detail: str
     dimension: str
 
-    # @validator("agencyId")
-    # def validate_agencyId(cls,value):
+    # @validator("agencyID")
+    # def validate_agencyID(cls,value):
     #     agency_list = [
     #             "SDMX",
     #             "ABS",
@@ -33,33 +42,55 @@ class Search(BaseModel):
     #     return value
     # @validator("dataflowId")
     # def dataflowId(cls,value):
+##### old method for the datafile "abs_dataflow.json" for simplicity swapped to reference_stubs.sjon
+# class Metadata(BaseModel):
+#     id: str
+#     # dataflowId
+#     agencyID: str #default all
+#     dataflowId: str
+#     version: str #default latest
+#     links: Dict[str,str]
+#     isFinal : bool
+#     name : str
+#     names : Dict[str,str]
+#     # annotations: list
+
+# class MetadataInput(BaseModel):
+
+#     agencyID: str #default all
+#     dataflowId: str
+#     links: Dict[str,str]
+#     version: str #default latest
+#     isFinal : bool
+#     name : str
+#     names: Dict[str,str]
+#     # annotations: list
 
 class Metadata(BaseModel):
     id: str
-    # dataflowId
-    agencyid: Optional[str] = None #default all
-    dataflowid: str
-    version: Optional[str] = None #default latest
-    links: Dict[str,str]
+
+    agencyId: str #default all
+    dataflowId: str
+    version: str #default latest
     isFinal : bool
     name : str
-    names : Dict[str,str]
+    description: Optional[str] = None
     # annotations: list
 
 class MetadataInput(BaseModel):
 
-    agencyid: Optional[str] = None #default all
-    dataflowid: str
-    links: Dict[str,str]
-    version: Optional[str] = None #default latest
+    agencyId: str #default all
+    dataflowId: str
+    version: str #default latest
     isFinal : bool
     name : str
-    names: Dict[str,str]
+    description: Optional[str] = None
     # annotations: list
+
 
     @computed_field
     def id(self) -> str:
-        return uuid.hex
+        return uuid4().hex
 
 if __name__ == "__main__":
     pass

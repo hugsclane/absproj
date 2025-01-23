@@ -18,11 +18,12 @@ class CRUD:
 
     def _insert(self,statement: str, input: BaseModel) -> str:
         with self.conn.cursor() as curs:
-            ##TODO: this exclude annotations is a temporary measure and should be removed 
+            ##TODO: this exclude annotations is a temporary measure and should be removed
             #when validation is properly implemented
-            curs.execute(statement,input.model_dump(exclude={"annotations"}))
+            curs.execute(statement,input.model_dump())
+                # exclude={"annotations"}))
             #checks to see if operation completed sucessfully
-            return cursor.fetchone()[0]
+            return curs.fetchone()[0]
 
     def _get(self,statement,model_class: type[T], **kwargs) -> T | None:
        with self.conn.cursor(row_factory=class_row(model_class)) as cursor:

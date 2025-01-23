@@ -2,7 +2,7 @@ from psycopg import Connection, conninfo
 import json
 import requests
 from rest import get_req
-from models import Metadata
+from models import *
 from crud import CRUD
 
 
@@ -13,7 +13,7 @@ class Pg_service:
     def __init__(self, port, dbname,password, user):
         self.conn_info =conninfo.make_conninfo(port = port, dbname = dbname,
                                        user =user, password = password)
-        print(self.conn_info)
+        # print(self.conn_info)
             # TODO: test me
 
     def create_connection(self):
@@ -47,10 +47,11 @@ def pwfromfile():
         file.close()
         return val.strip("\n")
 
+# currently only testing reference stubs from the metadata page.
 def main():
 
     #pull data out of the metadata.json (simulating get request)
-    with open("metadata/abs_dataflow.json", 'r') as file:
+    with open("metadata/reference_stubs.json", 'r') as file:
         data = json.loads(file.read())
         file.close()
     #Process data into Metadata model class
@@ -65,9 +66,29 @@ def main():
     pg_serve = Pg_service(dbname = "postgres",user = "hcl", password = pw, port = "5432")
     crud = pg_serve.create_connection()
 
-    crud.insert_metadata(data["data"])
-    print(crud.get_metadata("5"))
 
+    ## TODO: belongs in its own function, also handle i.pop("unwanted_fields")
+    model_list = []
+    unwanted_fields = ["names","descriptions","annotations","structure"]
+    for i in data["data"]["dataflows"]:
+
+        for j in unwanted_fields:
+            try:
+                i.pop(j)
+            except:
+                pass
+            pass
+        i["dataflowId"] = i.pop("id")
+        i["agencyId"] = i.pop("agencyID")
+        # print(i)
+        # break
+        column = MetadataInput(**i)
+        model_list.append(column)
+        print(len(model_list))
+        # print(column)
+        # print(crud.insert_metadata(column))
+
+        crud.insert_metadata(column)
     pg_serve.close_connection()
 if __name__ == "__main__":
     main()
