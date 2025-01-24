@@ -1,4 +1,5 @@
 from psycopg import Connection
+from psycopg.rows import class_row
 from pydantic import BaseModel
 
 # from src.statements import *
@@ -21,6 +22,7 @@ class CRUD:
             ##TODO: this exclude annotations is a temporary measure and should be removed
             #when validation is properly implemented
             curs.execute(statement,input.model_dump())
+            self.conn.commit()
                 # exclude={"annotations"}))
             #checks to see if operation completed sucessfully
             return curs.fetchone()[0]

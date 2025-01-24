@@ -10,8 +10,8 @@ from crud import CRUD
 class Pg_service:
 
     ##host omitted in conninfo for local testing
-    def __init__(self, port, dbname,password, user):
-        self.conn_info =conninfo.make_conninfo(port = port, dbname = dbname,
+    def __init__(self,host, port, dbname,password, user):
+        self.conn_info =conninfo.make_conninfo(host = host,port = port, dbname = dbname,
                                        user =user, password = password)
         # print(self.conn_info)
             # TODO: test me
@@ -63,7 +63,7 @@ def main():
     pw = pwfromfile()
     # print(pw)
     # print(data["data"])
-    pg_serve = Pg_service(dbname = "postgres",user = "hcl", password = pw, port = "5432")
+    pg_serve = Pg_service(host="localhost",dbname = "postgres",user = "hcl", password = pw, port = "5432")
     crud = pg_serve.create_connection()
 
 
@@ -83,12 +83,18 @@ def main():
         # print(i)
         # break
         column = MetadataInput(**i)
-        model_list.append(column)
-        print(len(model_list))
+        # print(len(model_list))
         # print(column)
         # print(crud.insert_metadata(column))
 
-        crud.insert_metadata(column)
+        id = crud.insert_metadata(column)
+
+        try:
+            model_list.append(crud.get_metadata(id))
+        except Exception as e:
+            print(i)
+    for m in model_list:
+        print(m.model_dump())
     pg_serve.close_connection()
 if __name__ == "__main__":
     main()

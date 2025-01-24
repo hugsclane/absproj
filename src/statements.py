@@ -20,7 +20,7 @@ INSERT INTO absdata.metadata (
         %(dataflowId)s,
         %(version)s,
         %(isFinal)s,
-        %(name)s, 
+        %(name)s,
         %(description)s
         )
 RETURNING id
@@ -28,8 +28,7 @@ RETURNING id
 """
 ## annotations is going to break postgres
 get_metad_stmt = """
-SELECT * FROM metadata where id = %(id)s
-
+SELECT * FROM absdata.metadata where id = %(id)s
 """
 
 
