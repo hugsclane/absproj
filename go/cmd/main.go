@@ -1,21 +1,19 @@
 package main
 
 import (
-	"context"
 	"log"
 	"os"
 	"os/signal"
 
 	"github.com/hugsclane/absproj/go/config"
 	"github.com/hugsclane/absproj/go/internal/postgres"
+	"github.com/hugsclane/absproj/go/internal/redis"
+	"github.com/hugsclane/absproj/go/internal/server"
 	"go.uber.org/zap"
 )
 
 func main() {
 	cfg := configFromEnv()
-
-	// app context
-	ctx, cancel := context.WithCancel(context.Background())
 
 	// create logger
 	lg, err := newLogger()
@@ -36,7 +34,7 @@ func main() {
 	}
 
 	// create web server
-	srv := server.New(lg, postgres, redis)
+	srv := server.NewServer(lg, pg, rd, cfg.Server)
 	go func() {
 		if err := srv.Listen(); err != nil {
 			lg.Error("application closed unexpectedly with error", zap.Error(err))
