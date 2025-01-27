@@ -15,7 +15,9 @@
 package main
 
 import (
+	"context"
 	"dagger/go/internal/dagger"
+	"fmt"
 )
 
 type Go struct{}
@@ -23,16 +25,48 @@ type Go struct{}
 const postgresPassword = "password"
 const postgresSvc = "postgres"
 
-func (m *Go) postgres() *dagger.Service {
+func (m *Go) FlywayInit(ctx context.Context, src *dagger.Directory) (string, error) {
 	return dag.Container().
+		From("flyway/flyway:11.2.0-alpine").
+		WithMountedDirectory("src", src.Directory("src")).
+		Terminal().
+		WithExec(
+			[]string{`-workingDirectory="/flyway/src"`,
+				"-url=jdbc:postgresql://postgres:5432/postgres?user=postgres&password=password",
+				"migrate",
+			},
+			dagger.ContainerWithExecOpts{UseEntrypoint: true},
+		).
+		Stdout(ctx)
+}
+
+func (m *Go) postgres(ctx context.Context, src *dagger.Directory) *dagger.Service {
+	pg := dag.Container().
 		From("postgres:17.2").
 		WithEnvVariable("POSTGRES_PASSWORD", postgresPassword).
 		WithExposedPort(5432).
 		AsService()
+
+	s, _ := dag.Container().
+		From("flyway/flyway:11.2.0-alpine").
+		WithMountedDirectory("src/migrations", src.Directory("migrations")).
+		WithServiceBinding("postgres", pg).
+		Terminal().
+		WithExec(
+			[]string{`-workingDirectory="/flyway/src"`,
+				"-url=jdbc:postgresql://postgres:5432/postgres?user=postgres&password=password",
+				"migrate",
+			},
+			dagger.ContainerWithExecOpts{UseEntrypoint: true},
+		).
+		Stdout(ctx)
+	fmt.Println("flyway migrations result", s)
+
+	return pg
 }
 
-func (m *Go) Postgres() *dagger.Service {
-	return m.postgres()
+func (m *Go) Postgres(ctx context.Context, src *dagger.Directory) *dagger.Service {
+	return m.postgres(ctx, src)
 }
 
 func (m *Go) redis() *dagger.Service {
@@ -59,8 +93,7 @@ func (m *Go) Psql(svc *dagger.Service) *dagger.Container {
 		From("postgres:17.2").
 		WithEnvVariable("PGPASSWORD", postgresPassword).
 		WithServiceBinding("postgres", svc).
-		WithExec([]string{"psql", "-U", "postgres", "-h", "postgres"}).
-		Terminal()
+		Terminal(dagger.ContainerTerminalOpts{Cmd: []string{"psql", "-U", "postgres", "-h", "postgres"}})
 }
 
 func (m *Go) RedisCLI(svc *dagger.Service) *dagger.Container {

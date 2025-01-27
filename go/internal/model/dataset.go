@@ -1,6 +1,6 @@
-package postgres
+package model
 
 type DataSet struct {
 	Key  string
-	Data string
+	Data []byte
 }

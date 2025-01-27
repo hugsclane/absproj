@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hugsclane/absproj/go/internal/model"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -50,15 +51,20 @@ func NewDatabase(c Config) (*Database, error) {
 	}, nil
 }
 
+func (d *Database) Close() error {
+	d.pool.Close()
+	return nil
+}
+
 // GetDataSet - gets a dataset
-func (d *Database) GetDataSet(ctx context.Context, dataSetKey string) (*DataSet, error) {
+func (d *Database) GetDataSet(ctx context.Context, dataSetKey string) (*model.DataSet, error) {
 	rows, err := d.pool.Query(ctx, `SELECT key, data FROM data_set WHERE key = $1`, dataSetKey)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get the data set %w", err)
 	}
 	defer rows.Close()
 
-	var ds DataSet
+	var ds model.DataSet
 	err = scanOne(rows, func(rows pgx.Rows) error {
 		return rows.Scan(&ds.Key, &ds.Data)
 	})
@@ -91,7 +97,7 @@ func scanOne(rows pgx.Rows, scanFunc func(rows pgx.Rows) error) error {
 }
 
 // AddDataSet  - adds a dataset
-func (d *Database) AddDataSet(ctx context.Context, dataSet *DataSet) error {
+func (d *Database) AddDataSet(ctx context.Context, dataSet *model.DataSet) error {
 	_, err := d.pool.Exec(ctx, `INSERT INTO data_sets (
 		key,
 		data

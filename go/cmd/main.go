@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/hugsclane/absproj/go/config"
+	"github.com/hugsclane/absproj/go/cmd/env"
 	"github.com/hugsclane/absproj/go/internal/postgres"
 	"github.com/hugsclane/absproj/go/internal/redis"
 	"github.com/hugsclane/absproj/go/internal/server"
@@ -13,13 +13,18 @@ import (
 )
 
 func main() {
-	cfg := configFromEnv()
-
 	// create logger
-	lg, err := newLogger()
+	lg, lvl, err := newLogger()
 	if err != nil {
 		log.Fatal("failed to start logger")
 	}
+
+	// parse config
+	cfg, err := env.Config()
+	if err != nil {
+		lg.Error("failed to parse config", zap.Error(err))
+	}
+	lvl.SetLevel(cfg.LogLevel)
 
 	// create database connection
 	pg, err := postgres.NewDatabase(cfg.Postgres)
@@ -57,11 +62,13 @@ func main() {
 	}
 }
 
-func configFromEnv() *config.Config {
-
-}
-
-func newLogger() (*zap.Logger, error) {
+func newLogger() (*zap.Logger, zap.AtomicLevel, error) {
 	cfg := zap.NewProductionConfig()
-	return cfg.Build()
+
+	lg, err := cfg.Build()
+	if err != nil {
+		return nil, cfg.Level, err
+	}
+
+	return lg, cfg.Level, nil
 }
