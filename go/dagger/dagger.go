@@ -25,20 +25,21 @@ type Go struct{}
 const postgresPassword = "password"
 const postgresSvc = "postgres"
 
-func (m *Go) FlywayInit(ctx context.Context, src *dagger.Directory) (string, error) {
-	return dag.Container().
-		From("flyway/flyway:11.2.0-alpine").
-		WithMountedDirectory("src", src.Directory("src")).
-		Terminal().
-		WithExec(
-			[]string{`-workingDirectory="/flyway/src"`,
-				"-url=jdbc:postgresql://postgres:5432/postgres?user=postgres&password=password",
-				"migrate",
-			},
-			dagger.ContainerWithExecOpts{UseEntrypoint: true},
-		).
-		Stdout(ctx)
-}
+// func (m *Go) FlywayInit(ctx context.Context, src *dagger.Directory) (string, error) {
+// 	return dag.Container().
+// 		From("flyway/flyway:11.2.0-alpine").
+// 		WithMountedDirectory("src", src.Directory("migrations")).
+// 		WithWorkdir("/flyway/src").
+// 		WithExec(
+// 			[]string{
+// 				`-projectName="default"`,
+// 				`-databaseType="postgres"`,
+// 				"init",
+// 			},
+// 			dagger.ContainerWithExecOpts{UseEntrypoint: true},
+// 		).
+// 		Stdout(ctx)
+// }
 
 func (m *Go) postgres(ctx context.Context, src *dagger.Directory) *dagger.Service {
 	pg := dag.Container().
@@ -49,11 +50,10 @@ func (m *Go) postgres(ctx context.Context, src *dagger.Directory) *dagger.Servic
 
 	s, _ := dag.Container().
 		From("flyway/flyway:11.2.0-alpine").
-		WithMountedDirectory("src/migrations", src.Directory("migrations")).
+		WithMountedDirectory("/flyway/project", src).
 		WithServiceBinding("postgres", pg).
-		Terminal().
 		WithExec(
-			[]string{`-workingDirectory="/flyway/src"`,
+			[]string{`-workingDirectory="project"`,
 				"-url=jdbc:postgresql://postgres:5432/postgres?user=postgres&password=password",
 				"migrate",
 			},
