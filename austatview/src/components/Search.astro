@@ -1,0 +1,53 @@
+<aside>
+  <form class="form">
+    <div>
+      <label for="search"> Search dataflowid</label>
+      <span>Enter a search term to search the dataflowid field</span>
+    </div>
+    <input
+        type="search"
+        required minLength="2"
+        maxLength="24"
+        value=""
+        name="search"
+        id="search"
+        placeholder="Enter a search term"
+        />
+
+  </form>
+</aside>
+
+<script>
+  import DOMPurify from "dompurify";
+  const form = document.querySelector("form");
+
+  form?.addEventListener("submit",(e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const searchTerm = DOMPurify.sanitize(
+    formData.get("search")?.toString()
+    );
+  if (!searchTerm || searchTerm.length === 0) return;
+  const url = new URL("/search", window.location.origin);
+  url.searchParams.set("q",searchTerm);
+  window.location.assign(url.toString());
+  });
+</script>
+
+<style type="form/css" media="screen">
+  .form{
+    display: grid;
+    gap : 1rem;
+  max-width: 32ch;
+  border: 2px solid #222;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  }
+  .form label {
+    font-weight: bold;
+    font-size: 2rem;
+  }
+  input{
+    font:inherit;
+  }
+</style>

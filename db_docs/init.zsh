@@ -13,6 +13,8 @@ psql postgres
 ##make a mistake, try --> 
 #DROP SCHEMA absdata CASCADE;
 
+#SET SEARCH_PATH TO absdata
+
 # \i db_docs/schema.sql
 
 #stop server

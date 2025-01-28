@@ -1,3 +1,6 @@
+### Intent
+This project is a work in progress to improve my skills in a variaty of technical areas, and in project management. 
+
 # Project Description
 A website providing access to ABS data and some modeling tools with that data.
 
@@ -6,6 +9,7 @@ A website providing access to ABS data and some modeling tools with that data.
     - pydantic
 - postgres
 - poetry
+- Astro
 
 
 ### References

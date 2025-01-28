@@ -25,8 +25,19 @@ CREATE TABLE absdata.metadata(
     isfinal BOOLEAN,
     agencyid TEXT,
     description TEXT,
-    name TEXT
+    name TEXT,
+    UNIQUE (dataflowid)
 );
+
+CREATE TABLE absdata.datablob(
+  id CHAR(32) PRIMARY KEY,
+  dataflowid TEXT,
+  version TEXT,
+  name TEXT,
+  blob,
+  UNIQUE(dataflowid)
+)
+
 --Excluding annotations
 
 -- CREATE TABLE data_history(

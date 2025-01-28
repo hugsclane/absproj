@@ -1,0 +1,6 @@
+ - [x] test api serializers
+ - [ ] create an interface to interact get specific data
+ - [ ] create some pandas and stat lib stuff to explore the data
+ - [x] create a database to store specific data sets
+ - [ ] create a safe way of interacting with the data on the DB
+ - [ ] look through the data
