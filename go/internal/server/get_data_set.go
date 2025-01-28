@@ -1,9 +1,11 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/hugsclane/absproj/go/internal/model"
+	"github.com/hugsclane/absproj/go/internal/postgres"
 	"github.com/hugsclane/absproj/go/internal/redis"
 	"go.uber.org/zap"
 )
@@ -22,6 +24,10 @@ type GetDataSetResponse struct {
 func (s *Server) GetDataSet(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	intErr := func() {
+		s.internalError(rw, "internal server error while processing request")
+	}
+
 	sendResp := func(ds *model.DataSet) {
 		rs := GetDataSetResponse{
 			Key:  ds.Key,
@@ -29,7 +35,7 @@ func (s *Server) GetDataSet(rw http.ResponseWriter, r *http.Request) {
 		}
 		if err := writeJSON(rw, rs); err != nil {
 			s.lg.Error("failed to write response data", zap.Error(err))
-			s.internalError(rw, "")
+			intErr()
 		}
 	}
 
@@ -52,17 +58,25 @@ func (s *Server) GetDataSet(rw http.ResponseWriter, r *http.Request) {
 		sendResp(ds)
 		return
 	}
-	if err != nil {
-		if err == redis.ErrNotExists {
-			s.lg.Info("data set cache miss", zap.String("key", ds.Key))
-		}
+
+	if err != redis.ErrNotExists {
 		s.lg.Error("failed to get data set", zap.Error(err))
+		intErr()
+		return
 	}
+
+	s.lg.Info("data set cache miss", zap.String("key", ds.Key))
 
 	// check database
 	ds, err = s.pg.GetDataSet(ctx, req.Key)
+	if err == postgres.ErrNotExists {
+		s.httpError(rw, http.StatusNotFound, fmt.Sprintf("the data set does not exist"))
+		return
+	}
 	if err != nil {
 		s.lg.Error("failed to get data set", zap.Error(err))
+		intErr()
+		return
 	}
 
 	// async set the cache
@@ -71,4 +85,6 @@ func (s *Server) GetDataSet(rw http.ResponseWriter, r *http.Request) {
 			s.lg.Error("failed to add data set to redis async: %w", zap.Error(err))
 		}
 	}()
+
+	sendResp(ds)
 }

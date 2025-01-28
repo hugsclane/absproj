@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// create redis connection
-	rd, err := redis.NewDatabase(cfg.Redis)
+	rd, err := redis.NewDatabase(lg, cfg.Redis)
 	if err != nil {
 		lg.Error("failed to connect to redis", zap.Error(err))
 	}

@@ -25,23 +25,7 @@ type Go struct{}
 const postgresPassword = "password"
 const postgresSvc = "postgres"
 
-// func (m *Go) FlywayInit(ctx context.Context, src *dagger.Directory) (string, error) {
-// 	return dag.Container().
-// 		From("flyway/flyway:11.2.0-alpine").
-// 		WithMountedDirectory("src", src.Directory("migrations")).
-// 		WithWorkdir("/flyway/src").
-// 		WithExec(
-// 			[]string{
-// 				`-projectName="default"`,
-// 				`-databaseType="postgres"`,
-// 				"init",
-// 			},
-// 			dagger.ContainerWithExecOpts{UseEntrypoint: true},
-// 		).
-// 		Stdout(ctx)
-// }
-
-func (m *Go) postgres(ctx context.Context, src *dagger.Directory) *dagger.Service {
+func (m *Go) Postgres(ctx context.Context, src *dagger.Directory) *dagger.Service {
 	pg := dag.Container().
 		From("postgres:17.2").
 		WithEnvVariable("POSTGRES_PASSWORD", postgresPassword).
@@ -65,19 +49,11 @@ func (m *Go) postgres(ctx context.Context, src *dagger.Directory) *dagger.Servic
 	return pg
 }
 
-func (m *Go) Postgres(ctx context.Context, src *dagger.Directory) *dagger.Service {
-	return m.postgres(ctx, src)
-}
-
-func (m *Go) redis() *dagger.Service {
+func (m *Go) Redis() *dagger.Service {
 	return dag.Container().
 		From("redis:7.4.2").
 		WithExposedPort(6379).
 		AsService()
-}
-
-func (m *Go) Redis() *dagger.Service {
-	return m.redis()
 }
 
 func (m *Go) Rebrow(svc *dagger.Service) *dagger.Service {
