@@ -4,3 +4,4 @@
  - [x] create a database to store specific data sets
  - [ ] create a safe way of interacting with the data on the DB
  - [ ] look through the data
+ - [ ] setup go webserver
