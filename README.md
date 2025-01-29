@@ -1,5 +1,5 @@
 ### Intent
-This project is a work in progress to improve my skills in a variaty of technical areas, and in project management. 
+This project is a work in progress to improve my skills in a variaty of technical areas, and in project management.
 
 ### Requirements
 GNUmake
