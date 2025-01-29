@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/hugsclane/absproj/tree/webservice/internal/model"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/model"
 	"go.uber.org/zap"
 )
 

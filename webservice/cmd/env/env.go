@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hugsclane/absproj/tree/webservice/config"
-	"github.com/hugsclane/absproj/tree/webservice/internal/postgres"
-	"github.com/hugsclane/absproj/tree/webservice/internal/redis"
-	"github.com/hugsclane/absproj/tree/webservice/internal/server"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/config"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/postgres"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/redis"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/server"
 	"go.uber.org/zap/zapcore"
 )
 

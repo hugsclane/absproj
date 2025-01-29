@@ -3,7 +3,9 @@ This project is a work in progress to improve my skills in a variaty of technica
 
 ### Requirements
 GNUmake
+
 Dagger
+
 Docker
 
 
@@ -24,6 +26,8 @@ Install a version of go higher than go 1.21.
 Install docker
 
 Install dagger
+
+Install GNUmake
 
 ##### Makefile
 
@@ -46,6 +50,11 @@ https://api.gov.au/assets/APIs/abs/DataAPI.openapi.html
 dakivara pydantic_with_psycopg tutorial
 https://github.com/dakivara/pydantic_with_psycopg
 
-chrisjpalmer for guidance on golang
+chrisjpalmer for guidance on golang and webserver setup
 https://github.com/chrisjpalmer
 
+
+
+##### NOTE
+Before merging this branch, ensure go imports point to main instead of branch.
+It will be a part of commit -m "changed import dir for branch functionality"

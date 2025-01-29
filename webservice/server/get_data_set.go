@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hugsclane/absproj/tree/webservice/internal/model"
-	"github.com/hugsclane/absproj/tree/webservice/internal/postgres"
-	"github.com/hugsclane/absproj/tree/webservice/internal/redis"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/model"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/postgres"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/redis"
 	"go.uber.org/zap"
 )
 

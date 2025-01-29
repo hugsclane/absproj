@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hugsclane/absproj/tree/webservice/internal/model"
+	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/model"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
