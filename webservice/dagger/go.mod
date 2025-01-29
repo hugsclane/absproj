@@ -1,4 +1,4 @@
-module dagger/webservice
+module github.com/hugsclane/absproj/webservice
 
 go 1.23.2
 
