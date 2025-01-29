@@ -1,6 +1,6 @@
-module github.com/hugsclane/absproj/webservice
+module dagger/webservice
 
-go 1.23.2
+go 1.23.5
 
 require (
 	github.com/99designs/gqlgen v0.17.57
