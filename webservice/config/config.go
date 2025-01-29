@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/hugsclane/absproj/go/internal/postgres"
-	"github.com/hugsclane/absproj/go/internal/redis"
-	"github.com/hugsclane/absproj/go/internal/server"
+	"github.com/hugsclane/absproj/tree/webservice/internal/postgres"
+	"github.com/hugsclane/absproj/tree/webservice/internal/redis"
+	"github.com/hugsclane/absproj/tree/webservice/internal/server"
 	"go.uber.org/zap/zapcore"
 )
 

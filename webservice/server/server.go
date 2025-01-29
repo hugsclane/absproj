@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hugsclane/absproj/webservice/internal/postgres"
-	"github.com/hugsclane/absproj/webservice/internal/redis"
+	"github.com/hugsclane/absproj/tree/webservice/internal/postgres"
+	"github.com/hugsclane/absproj/tree/webservice/internal/redis"
 	"go.uber.org/zap"
 )
 
