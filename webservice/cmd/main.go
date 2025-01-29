@@ -5,10 +5,10 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/hugsclane/absproj/tree/webservice/webservice/config"
-	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/postgres"
-	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/redis"
-	"github.com/hugsclane/absproj/tree/webservice/webservice/internal/server"
+	"github.com/hugsclane/absproj/webservice/config"
+	"github.com/hugsclane/absproj/webservice/internal/postgres"
+	"github.com/hugsclane/absproj/webservice/internal/redis"
+	"github.com/hugsclane/absproj/webservice/internal/server"
 	"go.uber.org/zap/zapcore"
 )
 
