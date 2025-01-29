@@ -30,3 +30,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+#Don't take data with you
+*.json
+
+#dagger
+/dagger.gen.go
+/internal/dagger
+/internal/querybuilder
+/internal/telemetry
