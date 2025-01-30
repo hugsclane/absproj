@@ -15,7 +15,7 @@ Astro-Svelte is a framework I'm familiar with and I don't want to focus on front
 
 
 
-### Requirements
+### Requirements (incomplete)
 GNUmake
 
 Dagger
@@ -69,9 +69,3 @@ https://github.com/dakivara/pydantic_with_psycopg
 
 chrisjpalmer for guidance on golang and webserver setup
 https://github.com/chrisjpalmer
-
-
-
-##### NOTE
-Before merging this branch, ensure go imports point to main instead of branch.
-It will be a part of commit -m "changed import dir for branch functionality"

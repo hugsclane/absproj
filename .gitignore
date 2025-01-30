@@ -4,13 +4,16 @@
 public
 .git
 .DS_Store
+pwdf.txt
 __pycache__/
 
 # build output
 dist/
 # generated types
 .astro/
-
+#Obsidian files
+Proj/
+!Progress.md
 # dependencies
 node_modules/
 
@@ -19,6 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+db/
 
 
 # environment variables
