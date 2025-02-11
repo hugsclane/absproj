@@ -1,6 +1,6 @@
 package model
 
-type Dataset struct {
+type DataSet struct {
   Key string
   Data []byte
 }

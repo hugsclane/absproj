@@ -7,7 +7,7 @@ import (
 
 	"github.com/hugsclane/absproj/webservice/internal/model"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
+	// "github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -29,21 +29,31 @@ var (
 )
 
 func NewDatabase(c Config) (*Database, error) {
-	pool, err := pgxpool.NewWithConfig(context.Background(), &pgxpool.Config{
-		ConnConfig: &pgx.ConnConfig{
-			Config: pgconn.Config{
-				Host:     c.Host,
-				Port:     c.Port,
-				Database: c.Database,
-				User:     c.User,
-				Password: c.Password,
-			},
-		},
+  pgConfig, err := pgxpool.ParseConfig(
+    fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_min_cons=%d pool_max_conns=%d",
+                c.Host,c.Port,c.User,c.Password,c.Database,10,1000))
+  if err!=nil {
+  return nil, fmt.Errorf("failed to initially configure database",err)
+  }
+  pool, err := pgxpool.NewWithConfig(context.Background(),pgConfig)
 
-		// give us some conns for throughput
-		MinConns: 10,
-		MaxConns: 1000,
-	})
+
+
+  // &pgxpool.Config{
+		// ConnConfig: &pgx.ConnConfig{
+			// Config: pgconn.Config{
+				// Host:     c.Host,
+				// Port:     c.Port,
+				// Database: c.Database,
+				// User:     c.User,
+				// Password: c.Password,
+			// },
+		// },
+  // }
+		// // give us some conns for throughput
+		//
+		//
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to create database pool %w", err)
 	}

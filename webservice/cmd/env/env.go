@@ -17,7 +17,7 @@ import (
 
 // Config - returns config derived from the environment
 func Config() (config.Config, error) {
-	var pe parserErrors
+  var pe parserErrors
 
 	cfg := config.Config{
 		LogLevel: logLevel("APP_LOGLEVEL", &pe),
@@ -56,6 +56,12 @@ type parserError struct {
 	envVar string
 	msg    string
 }
+
+// func testenv(envVar string,pe *parserErrors) string {
+//     val := os.Getenv(envVar)
+//     pe.add("Here is my test thing :", val)
+//     return val
+//   }
 
 func (pe *parserErrors) add(envVar, msg string) {
 	pe.errs = append(pe.errs, parserError{envVar: envVar, msg: msg})

@@ -5,14 +5,19 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/hugsclane/absproj/webservice/config"
+  "github.com/joho/godotenv"
+  "github.com/hugsclane/absproj/webservice/cmd/env"
 	"github.com/hugsclane/absproj/webservice/internal/postgres"
 	"github.com/hugsclane/absproj/webservice/internal/redis"
 	"github.com/hugsclane/absproj/webservice/internal/server"
-	"go.uber.org/zap/zapcore"
+	"go.uber.org/zap"
 )
 
 func main() {
+  err := godotenv.Load()
+  if err != nil {
+    log.Fatal("failed to import .env")
+  }
 	// create logger
 	lg, lvl, err := newLogger()
 	if err != nil {
