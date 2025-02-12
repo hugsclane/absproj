@@ -9,4 +9,9 @@ import svelte from '@astrojs/svelte';
 export default defineConfig({
     site: 'https://example.com',
     integrations: [mdx(), sitemap(), svelte()],
+    vite: {
+        ssr: {
+            noExternal: ['webcoreui']
+        }
+    }
 });

@@ -2,14 +2,14 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import {SITE_TITLE,SITE_DESCRIPTION} from "../consts.ts";
+import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
 ---
 
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={"Data Search"} description={SITE_DESCRIPTION} />
 		<style>
 			main {
 				width: 960px;
@@ -90,8 +90,9 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts.ts";
           </div>
           <input
               type="search"
-              required minLength="2"
-              maxLength="24"
+              required
+              min="2"
+              max="24"
               value=""
               name="search"
               id="search"
@@ -101,16 +102,105 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts.ts";
       </aside>
       <p id="searchReadout"></p>
 			<section aria-label="Search Results">
-
+        <ul id="searchResults"></ul>
 			</section>
 		</main>
 		<Footer />
     <script >
+      import DOMPurify from "dompurify";
+      import Fuse from "fuse.js";
+
+      const SPINNER =` <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <style>
+        .spinner_ajPY{transform-origin:center;animation:spinner_AtaB
+        .75s infinite linear}@keyframes spinner_AtaB{100%{transform:rotate(360deg)}}
+        </style>
+        <path d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity=".25"/>
+        <path d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0 ,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z" class="spinner_ajPY"/>
+      </svg>`
+
+      let SEARCH_DATA;
+      let FUSE_INSTANCE;
+      const FUSE_OPTIONS ={
+
+      inclueScore: true,
+      shouldSort: true,
+      threshold: 0.6,
+      keys: [
+          {
+            name : "id",
+            weight: 1,
+          },
+          // {
+          //   name : "description",
+          //   weight: 0.7,
+          // },
+          // {
+          //   name: "annotations",
+          //   weight: 0.7,
+          // }
+        ]
+      }
+
       const search = document.querySelector("#search");
       const searchReadout = document.querySelector("#searchReadout");
-      window.addEventListener("DOMContentLoaded", () => 
-      {}
-      )
+      const searchResults = document.querySelector("#searchResults");
+
+      async function fetchSearchResults(search){
+        if (search.length === 0) return;
+        // searchResults.innerHTML = SPINNER;
+        if (!SEARCH_DATA) {
+          try{
+            const res = await fetch("/search.json");
+            if (!res.ok){
+                throw new Error("Something went wrong... please try again");
+              }
+              const data = await res.json();
+              SEARCH_DATA = data;
+            }
+            catch(e)
+            {
+              console.error(e);
+            }
+            }
+        if (SEARCH_DATA && !FUSE_INSTANCE){
+        FUSE_INSTANCE = new Fuse(SEARCH_DATA,FUSE_OPTIONS);
+        }
+        if(!FUSE_INSTANCE) return;
+        const searchResults = FUSE_INSTANCE.search(search);
+        console.log(search,": fetchSearchResults ~ data:", searchResults);
+      }
+
+
+      function updateDocumentTitle(search) {
+        document.title = search ? `Search results for "${search}"` : "search abs stats";
+      }
+      function updateSearchReadout(search) {
+       searchReadout.textContent = search ? `Search results for "${search}"` : "";
+      }
+
+      window.addEventListener("DOMContentLoaded", () =>
+            {
+              const urlParams =
+              DOMPurify.sanitize(
+              new URLSearchParams(window.location.search).get("q")
+              );
+
+            fetchSearchResults(urlParams);
+            updateDocumentTitle(urlParams);
+            updateSearchReadout(urlParams);
+            search.value = urlParams;
+            search.focus();
+            }
+            );
+
+      search.addEventListener("input", () =>
+      {
+        const searchTerm =  DOMPurify.sanitize(search.value);
+
+      updateDocumentTitle(searchTerm);
+      updateSearchReadout(searchTerm);
+      });
     </script>
 	</body>
 </html>
