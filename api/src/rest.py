@@ -15,9 +15,9 @@ def get_metadata():
     data = get_req(url)
     data_list = data[dataflows]
     return data_list
-
+f
 
 if __name__ == "__main__":
     get_req("https://data.api.abs.gov.au/rest/data/ABS%2CCPI%2C1.1.0/" /
             +"1.115485.10.50.Q?startPeriod=2022&endPeriod=2024&format=jsondata&detail=full")
-    
+
