@@ -17,7 +17,7 @@ const featured = defineCollection({
 
 const metadata = defineCollection({
   loader: file('./src/content/metadata/reference_stubs.json',
-               {parser: (text) => JSON.parse(text).data}),
+               {parser: (text) => JSON.parse(text).data.dataflows}),
 })
 
 export const collections = { featured ,

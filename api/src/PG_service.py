@@ -14,7 +14,7 @@ class PG_service:
         self.conn_info =conninfo.make_conninfo(
                 host = host,port = port, dbname = dbname,user =user, password = password)
         self.conn = create_connection()
-        self.crud = create_crud():
+        self.crud = create_crud()
 
     def create_connection(self):
         conn = Connection.connect(conninfo = self.conn_info)
@@ -32,11 +32,6 @@ class PG_service:
 
 
 
-#TODO: hugo run
-# git filter-repo --invert-paths --path db_docs/pwdf
-# at some point
-
-# currently only testing reference stubs from the metadata page.
 def main():
     pw = pwfromfile("db_docs/pwdf.txt")
 
@@ -47,7 +42,6 @@ def main():
 
     crud = pg_serve.create_crud()
 
-    ## TODO: belongs in its own function, also handle i.pop("unwanted_fields")
     model_list = []
     unwanted_fields = ["names","descriptions","annotations","structure"]
     data = of_json("metadata/reference_stubs.json")

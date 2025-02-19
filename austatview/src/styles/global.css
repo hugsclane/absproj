@@ -127,6 +127,7 @@ blockquote {
 	margin: 0px;
 	font-size: 1.333em;
 }
+
 hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
@@ -139,7 +140,9 @@ hr {
 		padding: 1em;
 	}
 }
-
+.rv-collapse {
+    flex-direction: column-reverse;
+}
 .sr-only {
 	border: 0;
 	padding: 0;

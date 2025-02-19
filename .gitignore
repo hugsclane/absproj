@@ -35,7 +35,7 @@ db/
 # jetbrains setting folder
 .idea/
 
-#Don't take data with you
+#Don't take data with you exepct abs ref metadata
 *.json
 
 #dagger

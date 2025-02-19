@@ -13,7 +13,7 @@ for k ,v in dfile.items():
             for i,j in enumerate(value):
                 if i == 1096:
                     print(str(j) + "\n")
-l                if i == 1097:
+                if i == 1097:
                     print(j)
                     break
 
