@@ -3,6 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
+
 ---
 
 
@@ -10,74 +11,13 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
 <html lang="en">
 	<head>
 		<BaseHead title={"Data Search"} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
+		<style >
+
+ul {
+  list-style-type: none;
+  padding: unset;
+  position: relative;
+}
 		</style>
 	</head>
 	<body>
@@ -106,7 +46,7 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
 			</section>
 		</main>
 		<Footer />
-    <script >
+    <script>
       import DOMPurify from "dompurify";
       import Fuse from "fuse.js";
 
@@ -131,24 +71,24 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
             name : "id",
             weight: 1,
           },
-          // {
-          //   name : "description",
-          //   weight: 0.7,
-          // },
-          // {
-          //   name: "annotations",
-          //   weight: 0.7,
-          // }
+          {
+            name : "description",
+            weight: 0.7,
+          },
+          {
+            name: "name",
+            weight:1,
+          }
         ]
       }
 
       const search = document.querySelector("#search");
       const searchReadout = document.querySelector("#searchReadout");
-      const searchResults = document.querySelector("#searchResults");
+      const resultsList = document.querySelector("#searchResults");
 
       async function fetchSearchResults(search){
         if (search.length === 0) return;
-        // searchResults.innerHTML = SPINNER;
+        resultsList.innerHTML = SPINNER;
         if (!SEARCH_DATA) {
           try{
             const res = await fetch("/search.json");
@@ -167,10 +107,35 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
         FUSE_INSTANCE = new Fuse(SEARCH_DATA,FUSE_OPTIONS);
         }
         if(!FUSE_INSTANCE) return;
-        const searchResults = FUSE_INSTANCE.search(search);
-        console.log(search,": fetchSearchResults ~ data:", searchResults);
+        const searchResult = FUSE_INSTANCE.search(search);
+
+        console.log(search,": fetchSearchResults ~ data:", searchResult);
+        // console.log(search,": fetchSearchResults ~ data:", resultsList);
+        resultsList.innerHTML =
+        searchResult.length > 0 ? generateSearchList(searchResult) :
+        "No results found"
       }
 
+
+      function generateSearchList(results){
+        return results.map((r) => {
+        const id = r.item.id;
+        const name = r.item.data.name;
+        const description = r.item.data.description;
+        return `
+
+
+        <li>
+          ${name}<span></span>
+          </li>`;
+           }).join("");
+        }
+
+      function updateSearchPageUrl(search){
+        const url = new URL(window.location.href);
+        url.serachParams.set("q", search);
+        window.history.replaceState(null,"",url);
+        }
 
       function updateDocumentTitle(search) {
         document.title = search ? `Search results for "${search}"` : "search abs stats";
@@ -200,7 +165,10 @@ import {SITE_TITLE,SITE_DESCRIPTION} from "../consts";
 
       updateDocumentTitle(searchTerm);
       updateSearchReadout(searchTerm);
+      fetchSearchResults(searchTerm);
+      updateSearchPageUrl(searchTerm);
       });
+
     </script>
 	</body>
 </html>

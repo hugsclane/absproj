@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Search from '../components/Search.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { Banner } from 'webcoreui/astro'
+import { Button, Collapsible } from 'webcoreui/astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -13,17 +13,45 @@ import { Banner } from 'webcoreui/astro'
 	</head>
 	<body>
 		<Header />
-    <Banner items={2} >
-    <Search>
-    <p> second thing </p>
-    </Banner>
-      <!-- <Search /> -->
 		<main>
-
-            <h1>Getting Started</h1>
-            <p>
-                Start looking for ABS data in the left banner.
+      <h1>Getting Started</h1>
+      <p>
+      Start through data with the search button.
 			</p>
+    <Collapsible className='rv-collapse'>
+      <Search />
+      <Button className='fOButton' slot="on">Search Metadata</Button>
+      <Button className='fCButton' slot="off">Hide</Button>
+    </Collapsible>
+
+<style>
+    .fOButton{
+      background-color: #AAA666; /* Green */
+      border: 0.1rem solid #ADaD8D;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+    }
+    .fCButton{
+      background-color: #AAAA6D; /* Green */
+      border: 0.1rem solid #ADaD8D;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+    }
+</style>
+<style is:global>
+    .rv-collapse{
+      flex-direction: column-reverse;
+  }
+</style>
+
 			<!-- <p> -->
 			<!-- 	This template comes with a few integrations already configured in your -->
 			<!-- 	<code>astro.config.mjs</code> file. You can customize your setup with -->
@@ -52,4 +80,5 @@ import { Banner } from 'webcoreui/astro'
 		</main>
 		<Footer />
 	</body>
+
 </html>
