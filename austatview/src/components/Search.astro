@@ -13,7 +13,6 @@ ul {
   position: relative;
 }
 </style>
-  <DataC client:load name={"bingus"} description={"description"}/>
       <div>
         <label for="search"> Search dataflowid</label>
         <span>Enter a search term to search the dataflowid field</span>
@@ -36,7 +35,7 @@ ul {
   </aside>
 
 <script >
-  import {afterUpdate, mount} from "svelte";
+  import {afterUpdate, mount, unmount} from "svelte";
   import CollapsibleSection from "./CollapsibleSection.svelte";
   import DataC from "./DataC.svelte";
   import DOMPurify from "dompurify";
@@ -81,8 +80,15 @@ ul {
     const resultsList = document.querySelector("#searchResults");
 
     async function fetchSearchResults(search){
-      if (search.length === 0) return;
-      // resultsList.innerHTML = SPINNER;
+
+      resultsList.innerHTML = "";
+      if (search.length === 0){
+        const delElement = document.getElementsByClassName("temp");
+        delElement.remove();
+
+      return
+      };
+
       if (!SEARCH_DATA) {
         try{
         const res = await fetch("/search.json");
@@ -106,7 +112,6 @@ ul {
       // console.log(search,": fetchSearchResults ~ data:", searchResult);
       // console.log(search,": fetchSearchResults ~ data:", resultsList);
       if (searchResult.length > 0) {
-
          generateSearchList(searchResult)
         }else{
         return "No results found";
@@ -129,9 +134,11 @@ ul {
       const description = r.item.data.description;
 
       const resultContainer = document.createElement("li");
+      resultContainer.className = "searchlist";
       mount(DataC,{ target:resultContainer,
       props: {name : `${name}`, description : `${description}`
       }})
+
       // resultContainer.innerHTML = `
       // <svelte:component this={DataC} name="${name}" description=${description}/>
       // `;
@@ -168,6 +175,9 @@ ul {
             new URLSearchParams(window.location.search).get("q")
             );
 
+
+          const delElement = document.getElementsByClassName("searchlist");
+          delElement.remove();
           fetchSearchResults(urlParams);
           updateDocumentTitle(urlParams);
           updateSearchReadout(urlParams);
