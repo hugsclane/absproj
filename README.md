@@ -57,6 +57,9 @@ Run make redis
 - `make docker-run`: runs the project in docker
 
 
+run this from webservice/api/
+`openapi-generator generate -i getspec.yaml -g go -o ../internal/api/`
+
 ### References
 
 ##### The api reference used to as a reference for structure.
