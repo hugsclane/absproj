@@ -9,7 +9,7 @@ import (
 	"slices"
 	"strings"
 	"time"
-
+  "github.com/hugsclane/absproj/webservice/internal/openapi"
 	"github.com/hugsclane/absproj/webservice/internal/postgres"
 	"github.com/hugsclane/absproj/webservice/internal/redis"
 	"go.uber.org/zap"
@@ -43,8 +43,38 @@ func NewServer(lg *zap.Logger, pg *postgres.Database, rd *redis.Database, cfg Co
 		Get: s.GetDataSet,
 	}))
 
+  mux.Handle("/hello",s.hydrate(Route{
+    Get: s.helloworld,
+  }))
+
+
 	return s
 }
+
+func (s *Server) helloworld(w http.ResponseWriter, r *http.Request) {
+
+  dataflowIdentifier := "ABS,CPI,1.1.0"
+  dataKey := "1.115486.10.50.Q"
+  startPeriod := "2020"
+  endPeriod := "2024"
+  format := "jsondata"
+  detail := "full"
+  dimensionAtObservation := "TIME_PERIOD"
+
+	configuration := api.openapiclient.NewConfiguration()
+	apiClient := api.openapiclient.NewAPIClient(configuration)
+	resp, r, err := api.apiClient.GetDataAPI.GetData(context.Background(),dataflowIdentifier,dataKey).StartPeriod(startPeriod).EndPeriod(endPeriod).Format(format).Detail(detail).DimensionAtObservation(dimensionAtObservation).Execute()
+	if err != nil {
+    zap.Error(err)
+	}
+	// response from `getdata`: string
+
+    // if ok,code, msg:= s.validateHeaders(r); !ok {
+    // s.lg.Error("invalid headers", zap.String("msg", msg), zap.Int("code", code))
+		// s.httpError(w, code, msg)
+    // }
+    resp
+  }
 
 func (s *Server) Listen() error {
 	return s.srv.ListenAndServe()
