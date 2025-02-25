@@ -1,0 +1,454 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: api.data@abs.gov.au
+  description: |
+    <div>
+      <h2>About the Beta</h2>
+      <p>This beta release allows you to preview ABS Data API before it is released in its final form and gives you the opportunity to provide the ABS with feedback as we work to enhance the service.</p>
+      <p>We will continue to load new datasets and update existing datasets as soon as possible after embargo on the data is lifted. However, <b>data in this beta release may not necessarily be the most up to date.</b> For the most up to date information visit the <a href="https://www.abs.gov.au/">ABS website</a>.</p>
+      <p>Availability of the ABS Data API (Beta) is not guaranteed. The service may be subject to change.</p>
+      <p>You can contact the ABS APIs team at <a href="mailto:api.data@abs.gov.au">api.data@abs.gov.au</a>. Please let us know any feedback or issues you have. You can request to join our register of interest to be notified of any changes in the API.  The <a href="https://www.abs.gov.au/websitedbs/D3310114.nsf/Home/Privacy?opendocument#from-banner=GB" target="_blank">ABS privacy policy</a> outlines how the ABS handles any personal information that you provide to us.</p>
+    </div>
+    <div>
+      <h2>Key Information</h2>
+      <p>The ABS Data REST API allows you to request ABS statistics including detailed economic, social and Census data.  Filter your query to return the data and metadata you are interested in.</p>
+      <p>The ABS Data API uses the Statistical Data and Metadata Exchange (SDMX) standard.  Data is available in XML, JSON and CSV.</p>
+    </div>
+  title: ABS Data API (Beta)
+  version: 0.2.0
+externalDocs:
+  description: SDMX RESTful web services specification on GitHub
+  url: https://github.com/sdmx-twg/sdmx-rest/wiki
+servers:
+- url: https://data.api.abs.gov.au/
+paths:
+  /rest/data/{dataflowIdentifier}/{dataKey}:
+    get:
+      operationId: GetData
+      parameters:
+      - description: "The dataflow identifier in {agencyId},{dataflowId},{version}\
+          \ format (eg. \"ABS,CPI,1.1.0\"). \nA list of all available dataflows can\
+          \ be returned using the *GET /rest/{structureType}/{agencyId}* operation.\n\
+          agencyId and version are optional. If agencyId is not specified it will\
+          \ default to “all”. If version is not specified it will default to “latest”\
+          .\n"
+        in: path
+        name: dataflowIdentifier
+        required: true
+        schema:
+          type: string
+      - description: "The key to query data returned.\nUse \"all\" if you would like\
+          \ to return all data for the dataset.\nTo filter data returned provide a\
+          \ data key, containing one or more coded values for each dimension, separated\
+          \ by a dot (dimensions must be in the order they are defined in the data\
+          \ structure). \nFor example “1.115486.10.50.Q”  filters for a single Consumer\
+          \ Price Index series\n\n* *Measure*: 1 - Index Number\n* *Index*: 115486\
+          \ - Health\n* *Adjustment Type*: 10 - Original\n* *Region*: 50 - Weighted\
+          \ average of eight capital cities\n* *Frequency*: Q - Quarterly\n\n\nWildcarding\
+          \ is supported by omitting values for the dimension. Eg. data for all regions:\
+          \ “1.115486.10..Q”.\nThe OR operator is supported using the + character.\
+          \ Eg. data for 2 series “1.131188+131189.10.50.Q”. \nYou can combine wildcarding\
+          \ and the OR operator. Eg. “1.131188+131189.10..Q\".\n  \nThe maximum allowed\
+          \ length of this parameter is currently 260 characters. Requests that exceed\
+          \ this limit will return a 400 error. We intend to increase this limit soon.\n\
+          \nThe dataKey parameter is case sensitive.\n"
+        in: path
+        name: dataKey
+        required: true
+        schema:
+          type: string
+      - description: "The start period (used to filter on time). This is inclusive.\
+          \ The value can be in the following formats:  \n*\tyear: yyyy\n*\tyear-semester:\
+          \ yyyy-S1 - yyyy-S2\n*\tyear-quarter: yyyy-Q1 - yyyy-Q4  \n*\tyear-month:\
+          \ yyyy-01 - yyyy-12\n"
+        in: query
+        name: startPeriod
+        schema:
+          type: string
+      - description: "The end period (used to filter on time). This is inclusive.\
+          \ The value can be in the following formats:\n*\tyear: yyyy\n*\tyear-semester:\
+          \ yyyy-S1 - yyyy-S2  \n*\tyear-quarter: yyyy-Q1 - yyyy-Q4  \n*\tyear-month:\
+          \ yyyy-01 - yyyy-12\n"
+        in: query
+        name: endPeriod
+        schema:
+          type: string
+      - description: "The format of data to return. Refer to the accept header if\
+          \ omitted. \n\n*\t**csvwithlabels**: csv format with columns for dimension\
+          \ codes and labels.\n*\t**csvfile**: csv format with columns for dimension\
+          \ codes.\n*\t**jsondata**: sdmx json format equivalent to application/vnd.sdmx.data+json\n\
+          *\t**genericdata**: sdmx xml format equivalent to application/vnd.sdmx.genericdata+xml\n\
+          *\t**structurespecificdata**: sdmx xml format equivalent to application/vnd.sdmx.structurespecificdata+xml\n"
+        in: query
+        name: format
+        schema:
+          enum:
+          - csvfilewithlabels
+          - csvfile
+          - jsondata
+          - genericdata
+          - structurespecificdata
+          type: string
+      - description: "The detail of data to return.\n\n*\t**full**: The data - series\
+          \ and observations - and the attributes will be returned. This is the default.\n\
+          *\t**dataonly**: The attributes will be excluded from the returned message.\n\
+          *\t**serieskeysonly**: Only the series, but without the attributes and the\
+          \ observations, will be returned. This can be useful for performance reasons,\
+          \ to return the series that match a certain query, without returning the\
+          \ actual data.\n*\t**nodata**: The series, including the attributes, will\
+          \ be returned, but the observations will not be returned.\n"
+        in: query
+        name: detail
+        schema:
+          enum:
+          - full
+          - dataonly
+          - serieskeysonly
+          - nodata
+          type: string
+      - description: |
+          Define the way data should be organized in the returned message. Possible options are:
+
+          * **TIME_PERIOD**: This will return a timeseries view of the data. This is the default value.
+          * **AllDimensions**: This will return a flat view of the data, with no groupings.
+          * **The ID of any other dimension**: This will return a cross-sectional view of the data.
+        in: query
+        name: dimensionAtObservation
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/vnd.sdmx.data+json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+            application/vnd.sdmx.structurespecificdata+xml:
+              schema:
+                type: string
+            text/csv:
+              schema:
+                type: string
+            application/vnd.sdmx.data+csv:
+              schema:
+                type: string
+            application/vnd.sdmx.data+csv;labels=both:
+              schema:
+                type: string
+            application/vnd.sdmx.data+csv;file=true;labels=both:
+              schema:
+                type: string
+          description: Success
+        "404":
+          content:
+            application/vnd.sdmx.data+json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+            application/vnd.sdmx.structurespecificdata+xml:
+              schema:
+                type: string
+            text/csv:
+              schema:
+                type: string
+            application/vnd.sdmx.data+csv:
+              schema:
+                type: string
+            application/vnd.sdmx.data+csv;labels=both:
+              schema:
+                type: string
+            application/vnd.sdmx.data+csv;file=true;labels=both:
+              schema:
+                type: string
+          description: No records found
+      summary: "Get data from a dataflow in XML, JSON or CSV."
+      tags:
+      - Get Data
+  /rest/{structureType}/{agencyId}:
+    get:
+      operationId: GetStructuresByAgencyId
+      parameters:
+      - description: The type of structure to retrieve.
+        in: path
+        name: structureType
+        required: true
+        schema:
+          enum:
+          - dataflow
+          - datastructure
+          - codelist
+          - conceptscheme
+          - categoryscheme
+          - contentconstraint
+          - actualconstraint
+          - agencyscheme
+          - categorisation
+          - hierarchicalcodelist
+          type: string
+      - description: The id of the agency maintaining the structures. Eg. "ABS".
+        in: path
+        name: agencyId
+        required: true
+        schema:
+          default: ABS
+          type: string
+      - description: |
+          Specify the desired amount of detail to be returned. For example, it is possible to instruct the web service to return only basic information about the resource, this is known in SDMX as a stub.
+
+          * **allstubs**: All artefacts will be returned as stubs.
+          * **referencestubs**: The referenced artefacts will be returned as stubs.
+          * **referencepartial**: The referenced item schemes should only include items used by the artefact to be returned. For example, a concept scheme would only contain the concepts used in a DSD, and its isPartial flag would be set to true. As another example, if a dataflow is constrained, then the codelists returned should only contain the subset of codes allowed by that constraint.
+          * **allcompletestubs**: All artefacts should be returned as complete stubs, containing identification information, the artefacts' name, description, annotations and isFinal information.
+          * **referencecompletestubs**: The referenced artefacts should be returned as complete stubs, containing identification information, the artefacts' name, description, annotations and isFinal information.
+          * **full**: All available information for all artefacts will be returned. This is the default.
+        in: query
+        name: detail
+        schema:
+          enum:
+          - full
+          - allstubs
+          - referencestubs
+          - referencepartial
+          - allcompletestubs
+          - referencecompletestubs
+          type: string
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/vnd.sdmx.structure+json:
+              schema:
+                type: string
+          description: Success
+      summary: Get all structures of a specific type.
+      tags:
+      - Get Metadata
+  /rest/{structureType}/{agencyId}/{structureId}:
+    get:
+      operationId: GetLatestStructure
+      parameters:
+      - description: The type of structure to retrieve.
+        in: path
+        name: structureType
+        required: true
+        schema:
+          enum:
+          - dataflow
+          - datastructure
+          - codelist
+          - conceptscheme
+          - categoryscheme
+          - contentconstraint
+          - actualconstraint
+          - agencyscheme
+          - categorisation
+          - hierarchicalcodelist
+          type: string
+      - description: The id of the agency maintaining the structures. Eg. "ABS".
+        in: path
+        name: agencyId
+        required: true
+        schema:
+          default: ABS
+          type: string
+      - description: The structure's id. "all" will return all artefacts of the selected
+          structure type.
+        in: path
+        name: structureId
+        required: true
+        schema:
+          type: string
+      - description: "Instruct the web service to return (or not) the artefacts referenced\
+          \ by the artefact(s) you are querying. Eg. the codelists and concepts used\
+          \ by the data structure you are querying. You can also retrieve the artefacts\
+          \ that use the artefact you are querying, eg. the dataflows that use the\
+          \ data structure definition queried.\n\n*\t**none**: No references will\
+          \ be returned. This is the default.\n*\t**parents**: The artefacts that\
+          \ use the artefact matching the query (for example, the dataflows that use\
+          \ the data structure definition matching the query) will be returned.\n\
+          *\t**parentsandsiblings**: The artefacts that use the artefact matching\
+          \ the query, as well as the artefacts referenced by these artefacts will\
+          \ be returned.\n*\t**children**: The artefacts referenced by the matching\
+          \ artefact will be returned (for example, the concept schemes and code lists\
+          \ used in a DSD).\n*\t**descendants**: References of references, up to any\
+          \ level, will also be returned.\n*\t**all**: The combination of parentsandsiblings\
+          \ and descendants.\n*\tIn addition, a specific structure type may also be\
+          \ used (e.g. codelist, dataflow, etc.).\n"
+        in: query
+        name: references
+        schema:
+          enum:
+          - none
+          - parents
+          - parentsandsiblings
+          - children
+          - descendants
+          - all
+          - datastructure
+          - dataflow
+          - codelist
+          - conceptscheme
+          - categoryscheme
+          - contentconstraint
+          - actualconstraint
+          - agencyscheme
+          - categorisation
+          - hierarchicalcodelist
+          type: string
+      - description: |
+          Specify the desired amount of detail to be returned. For example, it is possible to instruct the web service to return only basic information about the resource, this is known in SDMX as a stub.
+
+          * **allstubs**: All artefacts will be returned as stubs.
+          * **referencestubs**: The referenced artefacts will be returned as stubs.
+          * **referencepartial**: The referenced item schemes should only include items used by the artefact to be returned. For example, a concept scheme would only contain the concepts used in a DSD, and its isPartial flag would be set to true. As another example, if a dataflow is constrained, then the codelists returned should only contain the subset of codes allowed by that constraint.
+          * **allcompletestubs**: All artefacts should be returned as complete stubs, containing identification information, the artefacts' name, description, annotations and isFinal information.
+          * **referencecompletestubs**: The referenced artefacts should be returned as complete stubs, containing identification information, the artefacts' name, description, annotations and isFinal information.
+          * **full**: All available information for all artefacts will be returned. This is the default.
+        in: query
+        name: detail
+        schema:
+          enum:
+          - full
+          - allstubs
+          - referencestubs
+          - referencepartial
+          - allcompletestubs
+          - referencecompletestubs
+          type: string
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/vnd.sdmx.structure+json:
+              schema:
+                type: string
+          description: Success
+      summary: "Get the latest structure of a specific type, for a given agency and\
+        \ structure id."
+      tags:
+      - Get Metadata
+  /rest/{structureType}/{agencyId}/{structureId}/{structureVersion}:
+    get:
+      operationId: GetStructures
+      parameters:
+      - description: The type of structure to retrieve.
+        in: path
+        name: structureType
+        required: true
+        schema:
+          enum:
+          - dataflow
+          - datastructure
+          - codelist
+          - conceptscheme
+          - categoryscheme
+          - contentconstraint
+          - actualconstraint
+          - agencyscheme
+          - categorisation
+          - hierarchicalcodelist
+          type: string
+      - description: The id of the agency maintaining the structures. Eg. "ABS".
+        in: path
+        name: agencyId
+        required: true
+        schema:
+          default: ABS
+          type: string
+      - description: The structure's id. "all" will return all artefacts of the selected
+          structure type.
+        in: path
+        name: structureId
+        required: true
+        schema:
+          type: string
+      - description: "The version of the structure to retrieve. Three numbers separated\
+          \ by points, eg. \"1.0.0\"."
+        in: path
+        name: structureVersion
+        required: true
+        schema:
+          type: string
+      - description: "Instruct the web service to return (or not) the artefacts referenced\
+          \ by the artefact(s) you are querying. Eg. the codelists and concepts used\
+          \ by the data structure you are querying. You can also retrieve the artefacts\
+          \ that use the artefact you are querying, eg. the dataflows that use the\
+          \ data structure definition queried.\n\n*\t**none**: No references will\
+          \ be returned. This is the default.\n*\t**parents**: The artefacts that\
+          \ use the artefact matching the query (for example, the dataflows that use\
+          \ the data structure definition matching the query) will be returned.\n\
+          *\t**parentsandsiblings**: The artefacts that use the artefact matching\
+          \ the query, as well as the artefacts referenced by these artefacts will\
+          \ be returned.\n*\t**children**: The artefacts referenced by the matching\
+          \ artefact will be returned (for example, the concept schemes and code lists\
+          \ used in a DSD).\n*\t**descendants**: References of references, up to any\
+          \ level, will also be returned.\n*\t**all**: The combination of parentsandsiblings\
+          \ and descendants.\n*\tIn addition, a specific structure type may also be\
+          \ used (e.g. codelist, dataflow, etc.).\n"
+        in: query
+        name: references
+        schema:
+          enum:
+          - none
+          - parents
+          - parentsandsiblings
+          - children
+          - descendants
+          - all
+          - datastructure
+          - dataflow
+          - codelist
+          - conceptscheme
+          - categoryscheme
+          - contentconstraint
+          - actualconstraint
+          - agencyscheme
+          - categorisation
+          - hierarchicalcodelist
+          type: string
+      - description: |
+          Specify the desired amount of detail to be returned. For example, it is possible to instruct the web service to return only basic information about the resource, this is known in SDMX as a stub.
+
+          * **allstubs**: All artefacts will be returned as stubs.
+          * **referencestubs**: The referenced artefacts will be returned as stubs.
+          * **referencepartial**: The referenced item schemes should only include items used by the artefact to be returned. For example, a concept scheme would only contain the concepts used in a DSD, and its isPartial flag would be set to true. As another example, if a dataflow is constrained, then the codelists returned should only contain the subset of codes allowed by that constraint.
+          * **allcompletestubs**: All artefacts should be returned as complete stubs, containing identification information, the artefacts' name, description, annotations and isFinal information.
+          * **referencecompletestubs**: The referenced artefacts should be returned as complete stubs, containing identification information, the artefacts' name, description, annotations and isFinal information.
+          * **full**: All available information for all artefacts will be returned. This is the default.
+        in: query
+        name: detail
+        schema:
+          enum:
+          - full
+          - allstubs
+          - referencestubs
+          - referencepartial
+          - allcompletestubs
+          - referencecompletestubs
+          type: string
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/vnd.sdmx.structure+json:
+              schema:
+                type: string
+          description: Success
+      summary: "Get a specific version of a structure of a specific type, for a given\
+        \ agency and structure id."
+      tags:
+      - Get Metadata
+components:
+  schemas: {}
+x-original-swagger-version: "2.0"
