@@ -9,7 +9,8 @@ import (
 	"slices"
 	"strings"
 	"time"
-  "github.com/hugsclane/absproj/webservice/internal/openapi"
+              // github.com/hugsclane/absproj/webservice/internal/openapi
+  openapiclient "github.com/hugsclane/absproj/webservice/internal/openapi"
 	"github.com/hugsclane/absproj/webservice/internal/postgres"
 	"github.com/hugsclane/absproj/webservice/internal/redis"
 	"go.uber.org/zap"
@@ -61,9 +62,9 @@ func (s *Server) helloworld(w http.ResponseWriter, r *http.Request) {
   detail := "full"
   dimensionAtObservation := "TIME_PERIOD"
 
-	configuration := api.openapiclient.NewConfiguration()
-	apiClient := api.openapiclient.NewAPIClient(configuration)
-	resp, r, err := api.apiClient.GetDataAPI.GetData(context.Background(),dataflowIdentifier,dataKey).StartPeriod(startPeriod).EndPeriod(endPeriod).Format(format).Detail(detail).DimensionAtObservation(dimensionAtObservation).Execute()
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.GetDataAPI.GetData(context.Background(),dataflowIdentifier,dataKey).StartPeriod(startPeriod).EndPeriod(endPeriod).Format(format).Detail(detail).DimensionAtObservation(dimensionAtObservation).Execute()
 	if err != nil {
     zap.Error(err)
 	}
