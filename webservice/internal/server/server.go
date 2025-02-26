@@ -64,17 +64,27 @@ func (s *Server) helloworld(w http.ResponseWriter, r *http.Request) {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.GetDataAPI.GetData(context.Background(),dataflowIdentifier,dataKey).StartPeriod(startPeriod).EndPeriod(endPeriod).Format(format).Detail(detail).DimensionAtObservation(dimensionAtObservation).Execute()
-	if err != nil {
-    zap.Error(err)
-	}
+  rw, resp, err := apiClient.GetDataAPI.GetData(context.Background(),dataflowIdentifier,dataKey).
+      StartPeriod(startPeriod).
+      EndPeriod(endPeriod).
+      Format(format).
+      Detail(detail).
+      DimensionAtObservation(dimensionAtObservation).
+      Execute()
+  if err != nil {
+    s.lg.Error("failed to write reponse data", zap.Error(err))
+		fmt.Sprintf( "Full HTTP response: %v\n", resp)
+  }
+
+    if err := writeJSON(w,rw); err != nil{
+			s.lg.Error("failed to write response data", zap.Error(err))
+    }
 	// response from `getdata`: string
 
     // if ok,code, msg:= s.validateHeaders(r); !ok {
     // s.lg.Error("invalid headers", zap.String("msg", msg), zap.Int("code", code))
 		// s.httpError(w, code, msg)
     // }
-    resp
   }
 
 func (s *Server) Listen() error {
